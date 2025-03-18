@@ -1,0 +1,46 @@
+{
+    "langchain_agent": {
+        "model_name": "gpt-3.5-turbo",
+        "temperature": 0.2,
+        "max_tokens": 2000,
+        "top_p": 1.0,
+        "frequency_penalty": 0.0,
+        "presence_penalty": 0.0,
+        "timeout_seconds": 60,
+        "retry_attempts": 3
+    },
+    "autogen_agents": {
+        "default_model": "gpt-3.5-turbo",
+        "temperature": 0.7,
+        "max_tokens": 4000,
+        "use_memory": true,
+        "agents": {
+            "security_expert": {
+                "name": "Sicherheitsexperte",
+                "description": "Ein Experte für Cybersicherheit mit tiefgreifenden Kenntnissen in Pentesting und Sicherheitsanalyse.",
+                "temperature": 0.3
+            },
+            "attacker": {
+                "name": "Angreifer",
+                "description": "Spezialisiert auf offensive Sicherheit und ethisches Hacking. Kennt Angriffsvektoren und Exploits.",
+                "temperature": 0.7
+            },
+            "defender": {
+                "name": "Verteidiger",
+                "description": "Experte für Abwehrmaßnahmen und Systemhärtung. Kennt Best Practices für Sicherheitskonfigurationen.",
+                "temperature": 0.4
+            },
+            "planner": {
+                "name": "Planer",
+                "description": "Koordinator für die Erstellung strukturierter Sicherheitspläne und methodischer Vorgehensweisen.",
+                "temperature": 0.2
+            }
+        }
+    },
+    "hybrid_integration": {
+        "knowledge_weightage": 0.6,
+        "autogen_plan_weightage": 0.4,
+        "max_iterations": 3,
+        "convergence_threshold": 0.85
+    }
+} 

@@ -1,0 +1,30 @@
+{
+    "application": {
+        "name": "AutoGenchain",
+        "version": "1.0.0",
+        "log_level": "INFO",
+        "debug_mode": false
+    },
+    "paths": {
+        "knowledge_base": "./knowledge_base",
+        "data_output": "./data/results",
+        "temp_files": "./data/temp"
+    },
+    "security": {
+        "api_request_timeout": 60,
+        "max_retries": 3,
+        "rate_limit": 10
+    },
+    "features": {
+        "allow_interactive_mode": true,
+        "enable_result_caching": true,
+        "cache_expiry_minutes": 30,
+        "save_analysis_history": true
+    },
+    "reporting": {
+        "default_format": "json",
+        "include_timestamps": true,
+        "detailed_logging": true,
+        "max_history_items": 100
+    }
+} 

@@ -1,0 +1,242 @@
+# WiFi/Netzwerk-Hacking: Methoden, Angriffsvektoren und Schutzmaßnahmen
+
+## 1. Grundlagen der WiFi-Sicherheit
+
+### 1.1 WLAN-Protokolle und Evolution
+- **IEEE 802.11-Standards**: 802.11a/b/g/n/ac/ax
+- **Frequenzbänder**: 2,4 GHz und 5 GHz
+- **Netzwerkarchitektur**: Infrastructure Mode, Ad-hoc, Mesh
+- **Frame-Typen**: Management, Control, Data
+- **Authentifizierungsmethoden**: Open System, Shared Key, 802.1X/EAP
+
+### 1.2 WLAN-Verschlüsselungsprotokolle
+- **WEP (Wired Equivalent Privacy)**:
+  - RC4-Stromchiffre mit statischen Schlüsseln
+  - 64/128-bit Schlüssellänge
+  - Fundamentale Designschwächen
+- **WPA (WiFi Protected Access)**:
+  - TKIP (Temporal Key Integrity Protocol)
+  - Dynamische Schlüsselerzeugung
+  - Übergangsprotokoll
+- **WPA2 (WiFi Protected Access 2)**:
+  - AES-CCMP Verschlüsselung
+  - Stärkere Kryptographie als WPA
+  - PSK (Pre-Shared Key) und Enterprise-Modi
+- **WPA3 (WiFi Protected Access 3)**:
+  - SAE (Simultaneous Authentication of Equals)
+  - 192-bit Verschlüsselung (Enterprise)
+  - Forward Secrecy
+
+### 1.3 Netzwerkkomponenten und Angriffspunkte
+- **Access Points**: Firmware, Management-Schnittstellen
+- **Router**: Konfiguration, Service-Ports
+- **Clients**: Treiber, Supplicants
+- **Captive Portals**: Authentifizierungsseiten, Session-Handling
+- **Backend-Systeme**: RADIUS-Server, Authentifizierungsdatenbanken
+
+## 2. Passive WiFi-Aufklärung
+
+### 2.1 Netzwerk-Discovery
+- **Wardriving**: Fahrzeugbasierte WLAN-Erkundung
+- **Warwalking**: Zu Fuß durchgeführte WLAN-Erkundung
+- **SSID-Entdeckung**: Broadcast vs. Hidden SSIDs
+- **Beacon-Frame-Analyse**: Netzwerkinformationsgewinnung
+- **Probe Request/Response**: Client-AP Interaktionsanalyse
+
+### 2.2 Verkehrsüberwachung und -analyse
+- **Paketmitschnitt**: Erfassung von WLAN-Frames im Monitor-Modus
+- **Signal-Stärke-Mapping**: Positionsbestimmung von APs
+- **Clienterkennung**: MAC-Adressen, Verbindungsmuster
+- **Protokollanalyse**: Erkennung von verwendeten Diensten und Anwendungen
+- **Metadaten-Extraktion**: Gerätetypen, Herstellerinformationen
+
+### 2.3 Tools für passive Aufklärung
+- **Kismet**: WLAN-Erkennung und -Analyse
+- **Wireshark**: Detaillierte Paketanalyse
+- **Aircrack-ng Suite (airodump-ng)**: WLAN-Monitoring
+- **inSSIDer**: WLAN-Scanner und -Visualisierer
+- **Acrylic WiFi**: WLAN-Monitoring und -Analyse
+
+## 3. Aktive WiFi-Angriffe
+
+### 3.1 Authentifizierungsangriffe
+- **Brute-Force-Angriffe**: Wörterbuch- und Maskenangriffe auf PSKs
+- **Rainbow-Table-Angriffe**: Vorberechnete Hash-Tabellen
+- **PMKID-Angriffe**: Offline-Angriffe ohne kompletten 4-Way-Handshake
+- **EAP-Angriffe**: Schwachstellen in verschiedenen EAP-Methoden
+- **Cracking-Methoden**: CPU vs. GPU vs. Cloud-basiertes Cracking
+
+### 3.2 Man-in-the-Middle-Angriffe
+- **Evil Twin / Rogue AP**: Gefälschte Access Points
+- **Karma-Angriffe**: Ausnutzung von Probe Requests
+- **ARP-Spoofing**: MAC-Adressfälschung in WLANs
+- **DNS-Spoofing**: Manipulation von DNS-Anfragen
+- **SSL-Stripping**: Degradierung von HTTPS auf HTTP
+
+### 3.3 DoS und Jamming-Angriffe
+- **Deauthentication-Angriffe**: Unterbrechung von Client-Verbindungen
+- **TKIP-MIC-Exploitation**: Michael-Countermeasures DoS
+- **Channel Jamming**: Frequenzstörung mit Software oder Hardware
+- **Beacon Flooding**: Überlastung durch gefälschte Beacon-Frames
+- **CTS/RTS-Flooding**: Reservierung des Mediums durch Kontrollfames
+
+### 3.4 WEP-spezifische Angriffe
+- **Statistische Angriffe (FMS)**: Schwachstellen im RC4
+- **ChopChop-Angriff**: Byte für Byte Entschlüsselung
+- **Caffe Latte**: Client-seitige Angriffe
+- **PTW-Angriff**: Verbesserte statistische Methode
+- **Key-Reuse-Schwachstellen**: IV-Kollisionen
+
+### 3.5 WPA/WPA2-spezifische Angriffe
+- **4-Way-Handshake-Capturing**: Grundlage für Offline-Angriffe
+- **KRACK-Angriffe**: Key Reinstallation Attacks
+- **WPS-PIN-Angriffe**: Schwachstellen in WiFi Protected Setup
+- **Hashcat-Modi**: Verschiedene Angriffsstrategien für WPA
+- **PMKID-Angriff**: Schlüsselmaterial ohne vollständigen Handshake
+
+### 3.6 WPA3-spezifische Angriffe
+- **Dragonblood-Angriffe**: Schwachstellen in frühen Implementierungen
+- **Seitenkanal-Angriffe auf SAE**: Timing- und Cache-Angriffe
+- **Transition-Mode-Angriffe**: Downgrade zu schwächeren Protokollen
+- **Implementierungsfehler**: Herstellerspezifische Schwachstellen
+- **Gruppenschlüssel-Angriffe**: Schwachstellen in Multicast-/Broadcast-Verkehr
+
+## 4. Fortgeschrittene Angriffstechniken
+
+### 4.1 Clientseitige Angriffe
+- **Treiber-Exploitation**: Ausnutzung von Treiber-Schwachstellen
+- **Supplicant-Angriffe**: Schwachstellen in WLAN-Clients
+- **Captive Portal Bypass**: Umgehung von Authentifizierungsseiten
+- **MAC-Spoofing-Techniken**: Umgehung von MAC-Filterung
+- **Honypot-Netzwerke**: Ausnutzung automatischer Verbindungen
+
+### 4.2 Hardwarebasierte Angriffe
+- **WiFi-Pineapple**: Automatisierte MITM-Plattform
+- **Preiswerte SDR-Geräte**: Software Defined Radio für WLAN-Analyse
+- **Spezial-Antennen**: Erhöhung der Reichweite
+- **RFID-Proxying**: Relay-Angriffe auf kontaktlose Systeme
+- **Embedded Devices**: Maßgeschneiderte Angriffshardware
+
+### 4.3 Enterprise WiFi-Angriffe
+- **RADIUS-Server-Angriffe**: Schwachstellen in AAA-Infrastruktur
+- **EAP-Tunneling-Angriffe**: Schwachstellen in Enterprise-Authentifizierung
+- **Certificate-Based-Attacks**: Ausnutzung von Zertifikatsvalidierungsproblemen
+- **Internal Network Pivoting**: Ausweitung eines WiFi-Zugriffs
+- **VLAN-Hopping**: Überwindung von Netzwerksegmentierung
+
+### 4.4 IoT und spezielle Wireless-Protokolle
+- **Zigbee-Schwachstellen**: Smart Home Kommunikation
+- **Bluetooth-Angriffe**: BIAS, KNOB, BlueBorne, etc.
+- **Thread-Netzwerke**: IoT-Mesh-Protokollangriffe
+- **LoRaWAN-Sicherheit**: Angriffe auf Weitbereichsprotokolle
+- **5G/LTE-Schwachstellen**: Mobilfunk-/WiFi-Übergangspunkte
+
+## 5. WiFi-Penetrationstestmethodik
+
+### 5.1 Vorbereitung und Scope-Definition
+- **Rechtliche Absicherung**: Genehmigungen und Einschränkungen
+- **Zieldefinition**: APs, SSIDs, physische Bereiche
+- **Hardware-Vorbereitung**: Adapter, Antennen, Zubehör
+- **Testplanung**: Timing, Angriffsvektoren, Dokumentation
+- **Baseline-Erstellung**: Normale Betriebsbedingungen
+
+### 5.2 Durchführung eines WiFi-Penetrationstests
+- **Methodische Vorgehensweise**: PTES, OSSTMM, eigene Frameworks
+- **Erfassung und Dokumentation**: Beweismittel, Screenshots, Logs
+- **Eskalationspfade**: Von Zugangspunkt zu internen Systemen
+- **Ausweitung der Angriffsvektoren**: Kombination verschiedener Techniken
+- **Vermeidung von Ausfällen**: Nicht-disruptive Testmethoden
+
+### 5.3 Reporting und Nachbereitung
+- **Strukturierte Berichterstattung**: Executive Summary, technische Details
+- **Risikobewertung**: CVSS-Scores für WLAN-Schwachstellen
+- **Behebungsempfehlungen**: Konkrete und praktische Maßnahmen
+- **Proof-of-Concept**: Reproduzierbare Angriffspfade
+- **Bereinigungs-Validierung**: Überprüfung der Behebung
+
+### 5.4 Tools für WiFi-Penetrationstests
+- **Aircrack-ng Suite**: Umfassende WLAN-Testwerkzeuge
+- **Wifite**: Automatisiertes WLAN-Cracking
+- **Hashcat**: Passwort-Cracking mit GPU-Beschleunigung
+- **Bettercap**: MITM-Framework mit WLAN-Modulen
+- **WiFi-Pineapple**: Spezialisierte Hardware für WLAN-Angriffe
+- **Fluxion**: Social Engineering und Fake AP
+- **Wireshark/Tshark**: Tiefgehende Paketanalyse
+- **Kismet**: Erkennung und -überwachung
+- **Kali Linux/Parrot OS**: Spezialisierte Pentesting-Betriebssysteme
+
+## 6. Abwehrmaßnahmen und Härtung
+
+### 6.1 Access Point und Infrastruktur-Härtung
+- **Sichere Konfiguration**: Best Practices für verschiedene Hersteller
+- **Firmware-Updates**: Zeitnahe Patch-Verwaltung
+- **Segmentierung**: Gast-WiFi, IoT-Netzwerke, VLANs
+- **Wireless IDS/IPS**: Erkennung und Abwehr von Angriffen
+- **Physische Sicherheit**: Platzierung und Zugriffsschutz
+
+### 6.2 Authentifizierungs- und Verschlüsselungsmaßnahmen
+- **Starke Passwörter und PSKs**: Komplexität, Länge, Verwaltung
+- **802.1X/EAP-Implementierung**: Enterprise-Authentifizierung
+- **Zertifikatsbasierte Authentifizierung**: PKI-Setup und -Verwaltung
+- **WPA3-Migration**: Schritte zur sicheren Umstellung
+- **OWE (Opportunistic Wireless Encryption)**: Schutz offener Netze
+
+### 6.3 Client- und Endpunktschutz
+- **Client-Isolation**: Verhinderung von Client-zu-Client-Kommunikation
+- **NAC (Network Access Control)**: Geräteverifizierung vor Zugriff
+- **VPN-Nutzung**: Zusätzliche Verschlüsselungsebene
+- **Client-Härtung**: Sichere WLAN-Profileinstellungen
+- **MAC-Randomisierung**: Schutz vor Tracking
+
+### 6.4 Überwachung und Incident Response
+- **Wireless-Monitoring-Systeme**: Kontinuierliche Überwachung
+- **Rogue AP-Erkennung**: Identifizierung unberechtigter Access Points
+- **Anomalieerkennung**: KI-basierte Erkennung ungewöhnlicher Aktivitäten
+- **Protokollierung und Analyse**: SIEM-Integration
+- **Incident-Response-Plan**: Reaktion auf WLAN-Sicherheitsvorfälle
+
+## 7. Rechtliche und ethische Aspekte
+
+### 7.1 Rechtliche Rahmenbedingungen
+- **Nationale Gesetze**: Computerdelikte, Abhörschutz
+- **Datenschutzbestimmungen**: DSGVO, CCPA, etc.
+- **Telekommunikationsrecht**: Frequenznutzung, Störungsverbote
+- **Strafbarkeit**: Grenzen legaler Pentests, Rechtliche Risiken
+- **Grenzüberschreitende Aspekte**: Internationale Rechtslage
+
+### 7.2 Ethische Leitlinien
+- **Verantwortungsvolles Disclosure**: Meldung von Schwachstellen
+- **Scope-Beschränkung**: Einhaltung vereinbarter Grenzen
+- **Schadensvermeidung**: Nicht-disruptive Testmethoden
+- **Datenschutz**: Umgang mit erfassten persönlichen Daten
+- **Dokumentation**: Transparente Protokollierung aller Aktivitäten
+
+### 7.3 Zertifizierungen und Standards
+- **WiFi Alliance Zertifizierungen**: Standards und Programme
+- **ISO/IEC 27001**: Sicherheit von WLAN-Infrastruktur
+- **PCI DSS**: Anforderungen für Zahlungsumgebungen
+- **NIST-Richtlinien**: 800-153, 800-97
+- **Common Criteria**: Evaluierungsstufen für WLAN-Komponenten
+
+## 8. Zukunftstrends und Entwicklungen
+
+### 8.1 Neue Technologien und Standards
+- **WiFi 6/6E/7**: Sicherheitsaspekte neuer Protokolle
+- **5G-WiFi-Konvergenz**: Sicherheitsherausforderungen
+- **IoT-spezifische Protokolle**: Zukünftige Entwicklungen
+- **Mesh-Netzwerke**: Verteilte Sicherheitsarchitekturen
+- **Low-Power-WiFi**: Energieeffizienz vs. Sicherheit
+
+### 8.2 Aufkommende Bedrohungen
+- **KI-gestützte Angriffe**: Automatisierte Exploitation
+- **Quantencomputing-Auswirkungen**: Post-Quantum-Kryptografie für WLAN
+- **Seitenkanal-Angriffe**: Weiterentwicklungen physikalischer Angriffe
+- **Supply-Chain-Angriffe**: Kompromittierung von WLAN-Hardware
+- **Zero-Day-Exploits**: Handhabung unbekannter Schwachstellen
+
+### 8.3 Forschung und Weiterentwicklung
+- **Aktuelle Forschungsbereiche**: Akademische Arbeit
+- **Offensive Security Research**: Entwicklung neuer Angriffsarten
+- **Defensive Innovationen**: Neue Schutzmaßnahmen
+- **Open-Source-Initiativen**: Community-Entwicklungen
+- **Standardisierungsprozesse**: Einfluss auf zukünftige Protokolle 

