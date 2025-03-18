@@ -1,0 +1,71 @@
+# OWASP Top 10 Web-Anwendungs-Schwachstellen (2021)
+
+## 1. Fehlerhafte Zugriffskontrollen (Broken Access Control)
+- Beschreibung: Unzureichende Durchsetzung von Zugriffsrechten und Berechtigungen.
+- Risiken: Unberechtigter Zugriff auf Ressourcen, Daten oder Funktionen.
+- Beispiele: Pfad-Traversal, IDOR (Insecure Direct Object References), Privilege Escalation.
+- Erkennung: Testen von Zugriffskontrollen durch Manipulation von URLs, Parameter, Cookies.
+- Behebung: Least-Privilege-Prinzip, Zugriffsmodelle wie RBAC, Überprüfung auf Serverseite.
+
+## 2. Kryptographische Fehler (Cryptographic Failures)
+- Beschreibung: Unsachgemäße Implementierung von Verschlüsselung oder fehlende Verschlüsselung sensibler Daten.
+- Risiken: Datendiebstahl, Identitätsdiebstahl, Kompromittierung sensibler Informationen.
+- Beispiele: Unverschlüsselte Datenübertragung, schwache Algorithmen, selbst entwickelte Kryptographie.
+- Erkennung: SSL/TLS-Prüfung, Analyse der Netzwerkkommunikation, Codeanalyse.
+- Behebung: HTTPS, starke Algorithmen (z.B. AES-256), sichere Schlüsselverwaltung.
+
+## 3. Injection
+- Beschreibung: Einfügen von bösartigem Code durch ungefilterterte Benutzereingaben.
+- Risiken: Datendiebstahl, Datenmanipulation, Remote Code Execution.
+- Beispiele: SQL Injection, NoSQL Injection, OS Command Injection, LDAP Injection.
+- Erkennung: Eingabe von Sonderzeichen wie ' " ; -- und Beobachtung des Verhaltens.
+- Behebung: Parametrisierte Abfragen, ORM, Input-Validierung, Escaping.
+
+## 4. Unsichere Design (Insecure Design)
+- Beschreibung: Sicherheitslücken, die bereits in der Designphase entstehen, nicht nur bei der Implementierung.
+- Risiken: Systemweite Schwachstellen, die oft schwer zu beheben sind.
+- Beispiele: Fehlende Rate-Limits, schwache Geschäftslogik-Validierung, unsichere Standardeinstellungen.
+- Erkennung: Threat Modeling, Architekturanalyse, Designüberprüfung.
+- Behebung: Secure by Design-Prinzip, Threat Modeling, sicherer SDLC-Prozess.
+
+## 5. Sicherheitsfehlkonfiguration (Security Misconfiguration)
+- Beschreibung: Unsichere Standardkonfigurationen, unvollständige Konfigurationen, offene Cloud Storage.
+- Risiken: Unbeabsichtigter Datenzugriff, Dienstverweigerung, Systemkompromittierung.
+- Beispiele: Unnötige Services, Standardpasswörter, Debug-Informationen, übermäßige Berechtigungen.
+- Erkennung: Konfigurations-Scans, Überprüfung von Fehlerseiten, Serverinformationen.
+- Behebung: Härtung, minimale Konfiguration, Automatisierung, regelmäßige Überprüfung.
+
+## 6. Anfällige und veraltete Komponenten (Vulnerable and Outdated Components)
+- Beschreibung: Verwendung von Bibliotheken, Frameworks oder anderen Komponenten mit bekannten Schwachstellen.
+- Risiken: Ausnutzung bekannter Sicherheitslücken durch Angreifer.
+- Beispiele: Veraltete NPM-Pakete, unsichere jQuery-Versionen, ältere CMS-Versionen.
+- Erkennung: Dependency Scanning, Software Composition Analysis (SCA).
+- Behebung: Patch-Management, regelmäßige Updates, Vulnerability Monitoring.
+
+## 7. Identifikations- und Authentifizierungsfehler (Identification and Authentication Failures)
+- Beschreibung: Fehler in der Benutzeridentifikation, Authentifizierung und Session-Verwaltung.
+- Risiken: Kontoübernahme, Identitätsdiebstahl, Sitzungshijacking.
+- Beispiele: Schwache Passwörter, unsichere Passwort-Wiederherstellung, Session-Fixierung.
+- Erkennung: Brute-Force-Tests, Überprüfung der Passwortrichtlinien, Session-Handling-Tests.
+- Behebung: MFA, starke Passwortrichtlinien, sichere Session-Verwaltung, CAPTCHA.
+
+## 8. Software- und Datenintegritätsfehler (Software and Data Integrity Failures)
+- Beschreibung: Fehlende Überprüfung der Integrität von Code und Daten, unsichere CI/CD-Pipelines.
+- Risiken: Ausführung manipulierter Software, Datenmanipulation durch Angreifer.
+- Beispiele: Unsignierte Updates, unsichere Deserialisierung, Abhängigkeitsverwundbarkeiten.
+- Erkennung: Überprüfung der Signaturverifizierung, CI/CD-Pipeline-Analyse.
+- Behebung: Digitale Signaturen, Integritätsprüfungen, sichere CI/CD-Praktiken.
+
+## 9. Security Logging und Monitoring-Fehler (Security Logging and Monitoring Failures)
+- Beschreibung: Unzureichende Protokollierung und Überwachung von Sicherheitsereignissen.
+- Risiken: Verzögerte oder fehlende Erkennung von Angriffen, eingeschränkte forensische Möglichkeiten.
+- Beispiele: Fehlende Login-Protokollierung, keine Warnmeldungen bei verdächtigen Aktivitäten.
+- Erkennung: Log-Analyse, Überprüfung der Monitoring-Abdeckung, Incident Response-Tests.
+- Behebung: Zentralisierte Protokollierung, SIEM-Systeme, automatisierte Warnungen, Incident Response-Pläne.
+
+## 10. Server-Side Request Forgery (SSRF)
+- Beschreibung: Angreifer zwingt die Serveranwendung, Anfragen an nicht vorgesehene Ziele zu senden.
+- Risiken: Umgehung von Firewalls, Zugriff auf interne Dienste, Datenlecks.
+- Beispiele: Zugriff auf lokale Dienste, Cloud-Metadaten-Abfragen, Portscans aus dem Serverkontext.
+- Erkennung: URL-Parameter-Tests, Eingabe von internen IP-Adressen oder Domainnamen.
+- Behebung: Whitelisting von Zielen, Validierung von URLs, DMZ für externe Dienste, Reduzierung von Berechtigungen. 

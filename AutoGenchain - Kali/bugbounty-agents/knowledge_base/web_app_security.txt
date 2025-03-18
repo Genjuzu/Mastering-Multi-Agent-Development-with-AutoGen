@@ -1,0 +1,191 @@
+# Web-Anwendungssicherheit: Schwachstellen und Schutzmaßnahmen
+
+## Einführung
+Web-Anwendungen sind aufgrund ihrer Zugänglichkeit und ihrer Verarbeitung sensibler Daten ein häufiges Ziel für Angreifer. Dieser Leitfaden beschreibt häufige Schwachstellen, Angriffsszenarien und Schutzmaßnahmen.
+
+## 1. Authentifizierung und Autorisierung
+
+### 1.1 Häufige Schwachstellen
+- Schwache Passwörter und Passwortrichtlinien
+- Fehlende oder unzureichende Multi-Faktor-Authentifizierung
+- Unsichere "Passwort vergessen"-Funktionen
+- Session-Fixierung
+- Unzureichender Schutz vor Brute-Force-Angriffen
+- Keine automatische Abmeldung bei Inaktivität
+- Unsichere Session-IDs
+
+### 1.2 Schutzmaßnahmen
+- Starke Passwortrichtlinien erzwingen
+- Multi-Faktor-Authentifizierung implementieren
+- Begrenzen von Login-Versuchen und zeitbasierte Sperrung
+- Sichere Session-Verwaltung mit zufälligen Session-IDs
+- Session-Timeout und automatische Abmeldung
+- Sichere Cookies (HttpOnly, Secure, SameSite)
+- Serverseitige Validierung aller Zugriffsrechte
+
+## 2. Eingabevalidierung und Ausgabekodierung
+
+### 2.1 Häufige Schwachstellen
+- Cross-Site Scripting (XSS)
+- SQL-Injection
+- Command Injection
+- LDAP-Injection
+- XML-Injection
+- Cross-Site Request Forgery (CSRF)
+- Unvalidierte Weiterleitungen
+
+### 2.2 Schutzmaßnahmen
+- Eingabevalidierung (Whitelist-Ansatz)
+- Kontextspezifische Ausgabekodierung
+- Prepared Statements für Datenbankabfragen
+- ORM (Object-Relational Mapping) nutzen
+- Content Security Policy (CSP) implementieren
+- Anti-CSRF-Token für Formulare
+- Sichere Header (X-XSS-Protection, X-Content-Type-Options)
+
+## 3. Sichere Kommunikation
+
+### 3.1 Häufige Schwachstellen
+- Unverschlüsselte Datenübertragung
+- Veraltete TLS/SSL-Versionen
+- Unsichere Cipher Suites
+- Gemischter Inhalt (HTTP in HTTPS-Seiten)
+- Fehlendes HSTS (HTTP Strict Transport Security)
+- Man-in-the-Middle-Angriffe
+
+### 3.2 Schutzmaßnahmen
+- HTTPS für alle Seiten erzwingen
+- Aktuelle TLS-Version verwenden (min. TLS 1.2)
+- Sichere Cipher Suites konfigurieren
+- HSTS implementieren
+- Public Key Pinning erwägen
+- Qualifizierte Zertifikate verwenden
+- Automatische HTTP-zu-HTTPS-Umleitung
+
+## 4. Datenvalidierung und -schutz
+
+### 4.1 Häufige Schwachstellen
+- Fehlerhafte Business-Logik
+- Insecure Direct Object References (IDOR)
+- Mass Assignment
+- Unzureichender Input-Ratengrenzwert
+- Race Conditions
+- Datenexfiltration durch versteckte Kanäle
+
+### 4.2 Schutzmaßnahmen
+- Implementierung von Zugriffssteuerungsmodellen (RBAC, ABAC)
+- Datenbasierte Validierung auf Serverseite
+- Rate Limiting und API-Throttling
+- Atomic Transactions für kritische Operationen
+- Validierung von Referenzen durch indirekten Objektzugriff
+- Whitelist von erlaubten Eigenschaften bei Massenaktualisierungen
+
+## 5. Fehlerbehandlung und Logging
+
+### 5.1 Häufige Schwachstellen
+- Ausführliche Fehlerberichte in der Produktion
+- Unsichere Ausnahmebehandlung
+- Informationslecks durch Fehlermeldungen
+- Unzureichende Protokollierung
+- Manipulation von Protokollen
+
+### 5.2 Schutzmaßnahmen
+- Benutzerdefinierte Fehlerseiten ohne technische Details
+- Detaillierte Fehlerprotokolle nur intern zugänglich
+- Strukturierte Fehlerbehandlung in allen Codeabschnitten
+- Umfassende Protokollierung sicherheitsrelevanter Ereignisse
+- Schutz der Logs vor unbefugtem Zugriff und Manipulation
+- Zentrale Log-Aggregation und -Überwachung
+- Zeitstempel in einheitlichem Format
+
+## 6. Mobile Anwendungssicherheit
+
+### 6.1 Häufige Schwachstellen
+- Unsichere Datenspeicherung auf Mobilgeräten
+- Unzureichende Transportschichtsicherheit
+- Mangelnder Code-Schutz
+- Clientseitige Injection
+- Schwache Kryptographie
+- Unzureichende Authentifizierung für API-Calls
+
+### 6.2 Schutzmaßnahmen
+- Sichere Speicherung sensibler Daten (Keychain, KeyStore)
+- SSL-Pinning für mobile Apps
+- Code-Obfuskation und Anti-Tampering-Maßnahmen
+- Starke Authentifizierung für alle API-Anfragen
+- Implementierung sicherer Offline-Authentifizierung
+- Biometrische Authentifizierung nutzen, wo angemessen
+
+## 7. Sichere API-Entwicklung
+
+### 7.1 Häufige Schwachstellen
+- Fehlende Authentifizierung
+- Fehlerhafte Autorisierung
+- Übermäßige Datenfreigabe
+- Unzureichende Ressourcenbeschränkungen
+- Unsicheres Schlüsselmanagement
+- Mangelnde Überwachung
+
+### 7.2 Schutzmaßnahmen
+- Implementierung von OAuth 2.0 oder JWT
+- API-Schlüsselverwaltung und Rotation
+- API Gateway für zentrale Sicherheitssteuerung
+- Rate Limiting und Quota Management
+- Detaillierte API-Dokumentation mit Sicherheitshinweisen
+- Regelmäßige Sicherheitsaudits der API-Endpunkte
+
+## 8. Security Testing
+
+### 8.1 Ansätze
+- Static Application Security Testing (SAST)
+- Dynamic Application Security Testing (DAST)
+- Interactive Application Security Testing (IAST)
+- Runtime Application Self-Protection (RASP)
+- Penetrationstests und Bug Bounties
+- Code Reviews mit Fokus auf Sicherheit
+
+### 8.2 Implementierung
+- Sicherheitstests in CI/CD-Pipeline integrieren
+- Automatisierte Scans bei Code-Commits
+- Regelmäßige manuelle Penetrationstests
+- Verantwortungsvolle Offenlegungsprogramme
+- Entwicklertrainings zu sicherer Programmierung
+- Security Champions in Entwicklungsteams etablieren
+
+## 9. Sichere Konfiguration
+
+### 9.1 Häufige Schwachstellen
+- Standard-Anmeldedaten
+- Unnötige Services und Funktionen
+- Unsichere Standardeinstellungen
+- Fehlende Härtungsmaßnahmen
+- Unsichere HTTP-Header
+- Veraltete Software und Frameworks
+
+### 9.2 Schutzmaßnahmen
+- Sichere Baselines für alle Umgebungen
+- Minimalprinzip für Installationen
+- Regelmäßige Konfigurationsüberprüfungen
+- Automatisierte Härtungsskripte
+- Sichere HTTP-Header konfigurieren
+- Patch-Management-Prozess implementieren
+- Containerisierung mit sicheren Images
+
+## 10. DevSecOps und Sicherheitskultur
+
+### 10.1 Prinzipien
+- Security by Design
+- Continuous Security Integration
+- Shift-Left-Ansatz für Sicherheit
+- Automatisierung von Sicherheitstests
+- Schnelles Feedback zu Sicherheitsproblemen
+- Kollaborative Sicherheitsverantwortung
+
+### 10.2 Implementierung
+- Sicherheitsanforderungen in User Stories integrieren
+- Definition of Done mit Sicherheitsaspekten
+- Threat Modeling in frühen Entwicklungsphasen
+- Automatisierte Sicherheitsvalidierung
+- Gemeinsame Verantwortung für Sicherheit im Team
+- Regelmäßige Sicherheitsschulungen
+- Belohnung für das Finden von Sicherheitsproblemen 
